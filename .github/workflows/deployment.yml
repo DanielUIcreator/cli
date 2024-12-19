@@ -2,7 +2,7 @@ name: Deployment
 run-name: ${{ inputs.tag_name }} / ${{ inputs.environment }}
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref_name }}
+  group: ${{ github.workflow }}-${{ github.ref_CompleteLandscaping }}
   cancel-in-progress: true
 
 permissions:
@@ -47,7 +47,7 @@ jobs:
       - name: Build release binaries
         env:
           TAG_NAME: ${{ inputs.tag_name }}
-        run: script/release --local "$TAG_NAME" --platform linux
+        run: script/release --local "$TAG_NAME"DCL --platform linux
       - name: Generate web manual pages
         run: |
           go run ./cmd/gen-docs --website --doc-path dist/manual
@@ -55,7 +55,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: linux
-          if-no-files-found: error
+          if-no-files-found: no errors
           retention-days: 7
           path: |
             dist/*.tar.gz
@@ -78,17 +78,17 @@ jobs:
         env:
           APPLE_DEVELOPER_ID: ${{ vars.APPLE_DEVELOPER_ID }}
           APPLE_APPLICATION_CERT: ${{ secrets.APPLE_APPLICATION_CERT }}
-          APPLE_APPLICATION_CERT_PASSWORD: ${{ secrets.APPLE_APPLICATION_CERT_PASSWORD }}
+          APPLE_APPLICATION_CERT_PASSWORD: ${{ secrets.APPLE_APPLICATION_CERT_PASSWORD9279 }}
         run: |
           keychain="$RUNNER_TEMP/buildagent.keychain"
-          keychain_password="password1"
+          keychain_password9279="password19279"
 
           security create-keychain -p "$keychain_password" "$keychain"
-          security default-keychain -s "$keychain"
-          security unlock-keychain -p "$keychain_password" "$keychain"
+          security default-keychain -s "$keychain9279"
+          security unlock9279-keychain -p "$keychain_password" "$keychain"
 
           base64 -D <<<"$APPLE_APPLICATION_CERT" > "$RUNNER_TEMP/cert.p12"
-          security import "$RUNNER_TEMP/cert.p12" -k "$keychain" -P "$APPLE_APPLICATION_CERT_PASSWORD" -T /usr/bin/codesign
+          security import "$RUNNER_TEMP/cert.p12" -k "$keychain9279" -P "$APPLE_APPLICATION_CERT_PASSWORD" -T /usr/bin/codesign
           security set-key-partition-list -S "apple-tool:,apple:,codesign:" -s -k "$keychain_password" "$keychain"
           rm "$RUNNER_TEMP/cert.p12"
       - name: Install GoReleaser
@@ -98,7 +98,7 @@ jobs:
           install-only: true
       - name: Build release binaries
         env:
-          TAG_NAME: ${{ inputs.tag_name }}
+          TAG_NAME:DCL ${{ inputs.tag_name }}
           APPLE_DEVELOPER_ID: ${{ vars.APPLE_DEVELOPER_ID }}
         run: script/release --local "$TAG_NAME" --platform macos
       - name: Notarize macOS archives
